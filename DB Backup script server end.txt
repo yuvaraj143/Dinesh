@@ -1,0 +1,13 @@
+#!/bin/bash
+dbname=$1
+Password=$2
+# Create required directories
+if [ ! -e "/var/lib/jenkins/DatabaseBackup/Production/$dbname" ]                # Check Backup Directory exists.
+        then
+        mkdir "/var/lib/jenkins/DatabaseBackup/Production/$dbname"
+        chmod -R 777 /var/lib/jenkins/DatabaseBackup/Production/$dbname
+        fi
+wget --post-data 'master_pwd='$Password'&name='$dbname'&backup_format=zip' --no-proxy --no-cache --no-cookies --show-progress --https-only -O /var/lib/jenkins/DatabaseBackup/Production/$dbname/$dbname$(date +'%d%m%Y%T').zip https://$dbname.pappaya.education/web/database/backup
+cd /var/lib/jenkins/DatabaseBackup/Production/$dbname
+aws s3 sync ./  s3://frontend-backup-test-automation/ProductionED/$dbname
+rm /var/lib/jenkins/DatabaseBackup/Production/$dbname/$dbname*.zip
