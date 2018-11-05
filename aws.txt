@@ -1,0 +1,2 @@
+#!/bin/bash
+Element_array=$(aws ec2 describe-instances --filters Name=tag:odoo11,Values=yes  --query 'Reservations[*].Instances[*].[InstanceId]'  --output text | sed '$!N;s/\n/ /')
