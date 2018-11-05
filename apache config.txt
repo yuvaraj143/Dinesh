@@ -1,0 +1,63 @@
+<VirtualHost *:80>
+RewriteEngine on
+RewriteCond %{SERVER_PORT} !^443$
+RewriteRule ^/(.*)$ https://%{SERVER_NAME}%{REQUEST_URI} [R=301,L]
+ServerName nconnect.nspira.in
+DocumentRoot /var/www/html/nconnect/
+
+</VirtualHost>
+<IfModule mod_ssl.c>
+<VirtualHost *:443>
+     ServerAdmin ubuntu@localhost
+     ServerName nconnect.nspira.in
+     DocumentRoot /var/www/html/nconnect/
+##
+#    SSLEngine On
+#    SSLCertificateFile /etc/ssl/apache2/nconnect.in.crt
+ #   SSLCertificateKeyFile /etc/ssl/apache2/nconnect.in.key
+
+   # SSLCertificateFile /etc/ssl/certs/example.com.crt
+   # SSLCertificateKeyFile /etc/ssl/private/example.com.key
+   # SSLCACertificateFile /etc/ssl/certs/ca-certificates.crt
+
+   SSLEngine on
+   SSLProtocol -all +TLSv1.2
+                SSLCertificateFile    /etc/ssl/apache2/pappaya.com.crt
+                SSLCertificateKeyFile /etc/ssl/apache2/pappaya.com.key
+
+    ErrorLog /var/log/apache2/narayana_error.log
+    CustomLog /var/log/apache2/narayana_acess.log combined
+</VirtualHost>
+</IfModule>
+~
+=========================================================================================================================
+
+
+
+<VirtualHost *:80>
+       DocumentRoot /var/www/html/nconnect/
+       ServerName nconnect.nspira.in
+
+       #Rewrite to HTTPS
+       RewriteEngine On
+       RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI}
+
+</VirtualHost>
+
+<VirtualHost *:443>
+       ServerName nconnect.nspira.in
+       DocumentRoot /var/www/html/nconnect/
+       ServerAlias ubuntu
+       <Directory /var/www/html/nconnect/>
+       Options FollowSymLinks
+       AllowOverride All
+       Order allow,deny
+       allow from all
+       </Directory>
+       ErrorLog /var/log/apache2/nconnect-error_log
+       CustomLog /var/log/apache2/nconnect-access_log common
+       SSLEngine on
+       SSLProtocol -all +TLSv1.2
+       SSLCertificateFile "/etc/ssl/apache2/nconnect.in.crt"
+       SSLCertificateKeyFile "/etc/ssl/apache2/nconnect.in.key"
+</VirtualHost>
